@@ -93,6 +93,23 @@ func (c *Controller) isOvnFipDuplicated(fipName, eipV4IP string) error {
 	return nil
 }
 
+func (c *Controller) getVpcExternalPort(vpcName string) {
+	// get vpc external port
+	if vpcName == "" {
+		return
+	}
+	vpc, err := c.vpcsLister.Get(vpcName)
+	if err != nil {
+		klog.Errorf("failed to get vpc %s, %v", vpcName, err)
+		return
+	}
+	if vpc.Spec.ExternalGateway == nil || vpc.Spec.ExternalGateway.ExternalPort == "" {
+		klog.Errorf("vpc %s has no external port", vpcName)
+		return
+	}
+	c.OVNNbClient.SetVpcExternalPort(vpc.Spec.ExternalGateway.ExternalPort)
+}
+
 func (c *Controller) handleAddOvnFip(key string) error {
 	cachedFip, err := c.ovnFipsLister.Get(key)
 	if err != nil {
@@ -134,11 +151,13 @@ func (c *Controller) handleAddOvnFip(key string) error {
 		return err
 	}
 
-	var mac, subnetName, vpcName, ipName string
+	var mac, subnetName, vpcName, ipName, ingressRate, egressRate string
 	vpcName = cachedFip.Spec.Vpc
 	v4IP = cachedFip.Spec.V4Ip
 	v6IP = cachedFip.Spec.V6Ip
 	ipName = cachedFip.Spec.IPName
+	egressRate = cachedFip.Spec.EgressRate
+	ingressRate = cachedFip.Spec.IngressRate
 	if ipName != "" {
 		if cachedFip.Spec.IPType == util.Vip {
 			internalVip, err := c.virtualIpsLister.Get(ipName)
@@ -192,6 +211,7 @@ func (c *Controller) handleAddOvnFip(key string) error {
 		klog.Error(err)
 		return err
 	}
+
 	// ovn add fip
 	options := map[string]string{"staleless": strconv.FormatBool(c.ExternalGatewayType == kubeovnv1.GWDistributedType)}
 	if v4IP != "" && v4Eip != "" {
@@ -204,6 +224,13 @@ func (c *Controller) handleAddOvnFip(key string) error {
 		if err = c.OVNNbClient.AddNat(vpcName, ovnnb.NATTypeDNATAndSNAT, v6Eip, v6IP, mac, cachedFip.Spec.IPName, options); err != nil {
 			klog.Errorf("failed to create v6 fip, %v", err)
 			return err
+		}
+	}
+
+	if egressRate != "" || ingressRate != "" {
+		// add egress/ingress rate limit for fip
+		if err = c.OVNNbClient.AddQos(vpcName, cachedFip.Name, egressRate, ingressRate); err != nil {
+
 		}
 	}
 

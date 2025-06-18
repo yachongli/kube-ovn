@@ -2,7 +2,6 @@ package v1
 
 import (
 	"fmt"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -1021,12 +1020,14 @@ type OvnFip struct {
 	Status OvnFipStatus `json:"status,omitempty"`
 }
 type OvnFipSpec struct {
-	OvnEip string `json:"ovnEip"`
-	IPType string `json:"ipType"` // vip, ip
-	IPName string `json:"ipName"` // vip, ip crd name
-	Vpc    string `json:"vpc"`
-	V4Ip   string `json:"v4Ip"`
-	V6Ip   string `json:"v6Ip"`
+	OvnEip      string `json:"ovnEip"`
+	IPType      string `json:"ipType"` // vip, ip
+	IPName      string `json:"ipName"` // vip, ip crd name
+	Vpc         string `json:"vpc"`
+	V4Ip        string `json:"v4Ip"`
+	V6Ip        string `json:"v6Ip"`
+	EgressRate  string `json:"egressRate"`
+	IngressRate string `json:"ingressRate"`
 }
 
 // OvnFipCondition describes the state of an object at a certain point.
@@ -1036,12 +1037,14 @@ type OvnFipCondition Condition
 type OvnFipStatus struct {
 	// +optional
 	// +patchStrategy=merge
-	Vpc   string `json:"vpc" patchStrategy:"merge"`
-	V4Eip string `json:"v4Eip" patchStrategy:"merge"`
-	V6Eip string `json:"v6Eip" patchStrategy:"merge"`
-	V4Ip  string `json:"v4Ip" patchStrategy:"merge"`
-	V6Ip  string `json:"v6Ip" patchStrategy:"merge"`
-	Ready bool   `json:"ready" patchStrategy:"merge"`
+	Vpc         string `json:"vpc" patchStrategy:"merge"`
+	V4Eip       string `json:"v4Eip" patchStrategy:"merge"`
+	V6Eip       string `json:"v6Eip" patchStrategy:"merge"`
+	V4Ip        string `json:"v4Ip" patchStrategy:"merge"`
+	V6Ip        string `json:"v6Ip" patchStrategy:"merge"`
+	Ready       bool   `json:"ready" patchStrategy:"merge"`
+	EgressRate  string `json:"egressRate" patchStrategy:"merge"`
+	IngressRate string `json:"ingressRate" patchStrategy:"merge"`
 
 	// Conditions represents the latest state of the object
 	// +optional
