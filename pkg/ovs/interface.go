@@ -256,6 +256,7 @@ type NbClient interface {
 	DeleteLogicalGatewaySwitch(lsName, lrName string) error
 	DeleteSecurityGroup(sgName string) error
 	Common
+	Qos
 }
 
 type SbClient interface {
@@ -278,4 +279,10 @@ type Chassis interface {
 	UpdateChassisTag(chassisName, nodeName string) error
 	UpdateChassis(chassis *ovnsb.Chassis, fields ...any) error
 	ListChassis() (*[]ovnsb.Chassis, error)
+}
+
+type Qos interface {
+	AddQos(vpcName string, externalSubnetName string, v4Eip string, burstMax int, rateMax int, direction string) error
+	UpdateQos(vpcName string, externalSubnetName string, v4Eip string, burstMax int, rateMax int, direction string) error
+	DeleteQos(vpcName string, externalSubnetName string, v4Eip string, direction string) error
 }

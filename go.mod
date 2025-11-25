@@ -238,6 +238,7 @@ replace (
 	k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.32.10
 	k8s.io/dynamic-resource-allocation => k8s.io/dynamic-resource-allocation v0.32.10
 	k8s.io/endpointslice => k8s.io/endpointslice v0.32.10
+	k8s.io/externaljwt => github.com/kubernetes/externaljwt v0.34.2
 	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.32.10
 	k8s.io/kube-controller-manager => k8s.io/kube-controller-manager v0.32.10
 	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7

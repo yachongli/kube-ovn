@@ -1938,6 +1938,9 @@ spec:
       - jsonPath: .spec.ipName
         name: IpName
         type: string
+      - jsonPath: .spec.qosPolicy
+        name: QosPolicy
+        type: string
       schema:
         openAPIV3Schema:
           type: object
@@ -1956,6 +1959,8 @@ spec:
                 v6Ip:
                   type: string
                 vpc:
+                  type: string
+                qosPolicy:
                   type: string
                 conditions:
                   type: array
@@ -1990,6 +1995,8 @@ spec:
                 v4Ip:
                   type: string
                 v6Ip:
+                  type: string
+                qosPolicy:
                   type: string
 ---
 apiVersion: apiextensions.k8s.io/v1
