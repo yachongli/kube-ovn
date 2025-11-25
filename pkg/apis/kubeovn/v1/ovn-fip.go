@@ -53,12 +53,12 @@ type OvnFipSpec struct {
 	V6Ip string `json:"v6Ip"`
 	// FIP type
 	Type string `json:"type"` // distributed, centralized
+	// qospolicy
+	QoSPolicy string `json:"qosPolicy,omitempty"` // +optional
 }
 
 type OvnFipStatus struct {
-	// Conditions represents the latest state of the object
 	// +optional
-	// +patchMergeKey=type
 	// +patchStrategy=merge
 	Conditions []Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
@@ -76,6 +76,8 @@ type OvnFipStatus struct {
 	V6Ip string `json:"v6Ip" patchStrategy:"merge"`
 	// MacAddress of the FIP
 	MacAddress string `json:"macAddress" patchStrategy:"merge"`
+	// QosPolicy
+	QoSPolicy string `json:"qosPolicy" patchStrategy:"merge"` // +optional
 }
 
 func (s *OvnFipStatus) Bytes() ([]byte, error) {
